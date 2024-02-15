@@ -7,9 +7,12 @@ import { Logger } from "pino"
 import retry from "axios-retry-after"
 import { LRUCache } from 'lru-cache'
 
-const GET_USER_TTL_MS = 3600000 // 3600 seconds
-const GET_TWEETS_TTL_MS = 60000 // 60 seconds
-const GET_TWEET_TTL_MS = 60000 // 60 seconds
+const GET_USER_POSITIVE_TTL_MS = 3600000 // 3600 seconds
+const GET_USER_NEGATIVE_TTL_MS = 20000 // 20 seconds
+const GET_TWEETS_POSITIVE_TTL_MS = 60000 // 60 seconds
+const GET_TWEETS_NEGATIVE_TTL_MS = 20000 // 20 seconds
+const GET_TWEET_POSITIVE_TTL_MS = 60000 // 60 seconds
+const GET_TWEET_NEGATIVE_TTL_MS = 20000 // 20 seconds
 
 export interface Job {
     reqId: string
@@ -71,7 +74,11 @@ export class Proxy {
             reqId: options?.reqId
         })
 
-        this.cache.set(key, result, { ttl: GET_USER_TTL_MS })
+        if ( result.status === 200 ) {
+            this.cache.set(key, result, { ttl: GET_USER_POSITIVE_TTL_MS })
+        } else {
+            this.cache.set(key, result, { ttl: GET_USER_NEGATIVE_TTL_MS })
+        }
 
         return result
     }
@@ -89,7 +96,11 @@ export class Proxy {
             reqId: options?.reqId
         })
 
-        this.cache.set(key, result, { ttl: GET_TWEETS_TTL_MS })
+        if ( result.status === 200 ) {
+            this.cache.set(key, result, { ttl: GET_TWEETS_POSITIVE_TTL_MS })
+        } else {
+            this.cache.set(key, result, { ttl: GET_TWEETS_NEGATIVE_TTL_MS })
+        }
 
         return result
     }
@@ -106,7 +117,11 @@ export class Proxy {
             reqId: options?.reqId
         })
 
-        this.cache.set(key, result, { ttl: GET_TWEET_TTL_MS })
+        if ( result.status === 200 ) {
+            this.cache.set(key, result, { ttl: GET_TWEET_POSITIVE_TTL_MS })
+        } else {
+            this.cache.set(key, result, { ttl: GET_TWEET_NEGATIVE_TTL_MS })
+        }
 
         return result
     }
