@@ -27,7 +27,26 @@ export class Proxy {
     ) {
         this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
         this.client = axios.create()
-        this.client.interceptors.response.use(null, retry(this.client))
+        this.client.interceptors.response.use(null, retry(this.client, {
+            // Determine when we should attempt to retry
+            isRetryable (error) {
+                log.debug({ status: error.response?.status, headers: error.response?.headers }, 'checking retryable')
+                return (
+                    error.response && error.response.status === 429
+                    // Use X-Retry-After rather than Retry-After, and cap retry delay at 60 seconds
+                    // && error.response.headers['x-retry-after'] && error.response.headers['x-retry-after'] <= 60
+                )
+            },
+            // Customize the wait behavior
+            wait (error) {
+                log.debug({ status: error.response?.status, headers: error.response?.headers }, 'waiting for retry')
+                return new Promise(
+                    // Use X-Retry-After rather than Retry-After
+                    // resolve => setTimeout(resolve, error.response.headers['x-retry-after'])
+                    resolve => setTimeout(resolve, 30000)
+                )
+            }
+        }))
     }
 
     async getUser(username: string, options?: { reqId?: string }) {
