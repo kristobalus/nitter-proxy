@@ -9,7 +9,7 @@ import { LRUCache } from 'lru-cache'
 
 const GET_USER_POSITIVE_TTL_MS = 3600000 // 3600 seconds
 const GET_USER_NEGATIVE_TTL_MS = 20000 // 20 seconds
-const GET_TWEETS_POSITIVE_TTL_MS = 60000 // 60 seconds
+const GET_TWEETS_POSITIVE_TTL_MS = 20000 // 20 seconds
 const GET_TWEETS_NEGATIVE_TTL_MS = 20000 // 20 seconds
 const GET_TWEET_POSITIVE_TTL_MS = 60000 // 60 seconds
 const GET_TWEET_NEGATIVE_TTL_MS = 20000 // 20 seconds
@@ -85,7 +85,7 @@ export class Proxy {
     }
 
     async getUserTweets(userId: string, cursor?: string, options?: { reqId?: string }) {
-        const key = `users:${userId}:tweets:${cursor}`
+        const key = `users:${userId}:tweets:${cursor ?? 'last'}`
 
         if ( cursor && this.cache.has(key) ) {
             return this.cache.get(key)
