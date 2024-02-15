@@ -35,9 +35,10 @@ export class Proxy {
         private log: Logger,
         private baseUrl: string,
         private concurrency: number,
-        private retryAfterMillis: number
+        private retryAfterMillis: number,
+        private maxCacheSize: number
     ) {
-        this.cache =  new LRUCache({ max: 10000 })
+        this.cache =  new LRUCache({ max: maxCacheSize })
         this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
         this.client = axios.create()
         // this.client.interceptors.response.use(null, retry(this.client, {
