@@ -17,6 +17,9 @@ dependencies:
   fastq:
     specifier: ^1.17.1
     version: 1.17.1
+  lru-cache:
+    specifier: ^10.2.0
+    version: 10.2.0
   lru-ttl-cache:
     specifier: ^2.4.8
     version: 2.4.8
@@ -559,7 +562,6 @@ packages:
   /lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
     engines: {node: 14 || >=16.14}
-    dev: true
 
   /lru-cache@6.0.0:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
