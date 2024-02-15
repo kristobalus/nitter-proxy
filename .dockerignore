@@ -1,0 +1,15 @@
+# flyctl launch added from .gitignore
+**/.idea
+**/.env
+
+# flyctl launch added from .idea/.gitignore
+# Default ignored files
+.idea/shelf
+.idea/workspace.xml
+# Editor-based HTTP Client requests
+.idea/httpRequests
+fly.toml
+node_modules
+build
+build-image.sh
+docker-compose.yml

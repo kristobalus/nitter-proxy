@@ -1,0 +1,47 @@
+version: '3.8'
+
+networks:
+  app:
+
+services:
+  nitter-proxy:
+    hostname: nitter-proxy
+    image: kristobalus/nitter-proxy:1.0.0
+    container_name: nitter-proxy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      NITTER_BASE_URL: "http://nitter:8080"
+      CONCURRENCY: "1"
+    ports:
+      - "8080:8080"
+    networks:
+      - app
+
+  nitter-redis:
+    image: redis:latest
+    networks:
+      - app
+
+  nitter:
+    image: kristobalus/nitter:latest
+    hostname: nitter
+    platform: "linux/amd64"
+    environment:
+      NITTER_GUEST_ACCOUNTS_URL: "${NITTER_GUEST_ACCOUNTS_URL}"
+    entrypoint: |
+      /bin/sh -c '
+        cp /config/nitter.conf /src/nitter.conf
+        wget -O /src/guest_accounts.json $NITTER_GUEST_ACCOUNTS_URL || exit 1
+        ./nitter
+      '
+    depends_on:
+      - nitter-redis
+    volumes:
+      - ./configs/nitter:/config
+    networks:
+      - app
+

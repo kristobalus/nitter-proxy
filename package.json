@@ -1,0 +1,30 @@
+{
+  "name": "nitter-proxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf build/",
+    "prebuild": "npm run clean",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "axios-retry-after": "^2.0.0",
+    "fastify": "^4.21.0",
+    "fastq": "^1.17.1",
+    "lru-ttl-cache": "^2.4.8",
+    "pino": "^8.14.2",
+    "pino-pretty": "^10.2.0",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "dotenv": "^16.4.4",
+    "rimraf": "^5.0.1",
+    "ts-node": "^10.9.1"
+  }
+}

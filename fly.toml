@@ -1,0 +1,30 @@
+# fly.toml app configuration file generated for api-nitter on 2024-02-15T09:31:15+06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'api-nitter'
+primary_region = 'waw'
+
+[build]
+  image = 'kristobalus/nitter-proxy:latest'
+
+[env]
+  CONCURRENCY = '10'
+  HOST = '0.0.0.0'
+  NITTER_BASE_URL = 'https://unmanaged-api-nitter.fly.dev'
+  NITTER_GUEST_ACCOUNTS_URL = 'https://guest-keeper.fly.dev/guest-accounts'
+  PORT = '8080'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 1024
