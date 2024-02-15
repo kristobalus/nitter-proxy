@@ -23,7 +23,8 @@ export class Proxy {
     constructor(
         private log: Logger,
         private baseUrl: string,
-        private concurrency: number
+        private concurrency: number,
+        private retryAfterMillis: number
     ) {
         this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
         this.client = axios.create()
@@ -43,7 +44,7 @@ export class Proxy {
                 return new Promise(
                     // Use X-Retry-After rather than Retry-After
                     // resolve => setTimeout(resolve, error.response.headers['x-retry-after'])
-                    resolve => setTimeout(resolve, 30000)
+                    resolve => setTimeout(resolve, this.retryAfterMillis)
                 )
             }
         }))
