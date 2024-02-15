@@ -85,9 +85,9 @@ export class Proxy {
     }
 
     async getUserTweets(userId: string, cursor?: string, options?: { reqId?: string }) {
-        const key = `users:${userId}:tweets`
+        const key = `users:${userId}:tweets:${cursor}`
 
-        if ( this.cache.has(key) ) {
+        if ( cursor && this.cache.has(key) ) {
             return this.cache.get(key)
         }
 
