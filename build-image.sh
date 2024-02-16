@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Read the version from package.json
-VERSION=1.1.2
+VERSION=1.1.3
 IMAGE=kristobalus/nitter-proxy
 echo "building image $IMAGE using buildx..."
 

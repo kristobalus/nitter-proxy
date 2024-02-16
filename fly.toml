@@ -10,7 +10,7 @@ primary_region = 'waw'
   image = 'kristobalus/nitter-proxy:latest'
 
 [env]
-  CONCURRENCY = '5'
+  CONCURRENCY = '2'
   HOST = '0.0.0.0'
   NITTER_BASE_URL = 'https://unmanaged-api-nitter.fly.dev'
   NITTER_GUEST_ACCOUNTS_URL = 'https://guest-keeper.fly.dev/guest-accounts'
