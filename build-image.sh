@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Read the version from package.json
-VERSION=1.1.3
+VERSION=1.1.4
 IMAGE=kristobalus/nitter-proxy
 echo "building image $IMAGE using buildx..."
 
@@ -11,7 +11,6 @@ docker buildx build -f ./Dockerfile \
 		--build-arg VERSION="$VERSION" \
 		--label "build-tag=build-artifact" \
 		--platform linux/amd64 \
-		--platform linux/arm64 \
 		-t $IMAGE:$VERSION \
 		-t $IMAGE:latest \
 		--push . || { echo "failed to build docker image"; exit 1; }
