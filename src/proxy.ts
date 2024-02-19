@@ -30,37 +30,44 @@ export class Proxy {
     private readonly cache: LRUCache<string, JobResponse>
     private readonly client: AxiosInstance
     private readonly queue: fastq.queueAsPromised<Job, JobResponse>
+    private readonly retryAfterMillis: number;
+    private readonly maxCacheSize: number;
 
     constructor(
         private log: Logger,
         private baseUrl: string,
         private concurrency: number,
-        private retryAfterMillis: number,
-        private maxCacheSize: number
+        retryAfterMillis: number,
+        maxCacheSize: number
     ) {
+        this.maxCacheSize = maxCacheSize;
+        this.retryAfterMillis = retryAfterMillis;
         this.cache =  new LRUCache({ max: maxCacheSize })
         this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
         this.client = axios.create()
-        // this.client.interceptors.response.use(null, retry(this.client, {
-        //     // Determine when we should attempt to retry
-        //     isRetryable (error) {
-        //         log.debug({ status: error.response?.status, headers: error.response?.headers }, 'checking retryable')
-        //         return (
-        //             error.response && error.response.status === 429
-        //             // Use X-Retry-After rather than Retry-After, and cap retry delay at 60 seconds
-        //             // && error.response.headers['x-retry-after'] && error.response.headers['x-retry-after'] <= 60
-        //         )
-        //     },
-        //     // Customize the wait behavior
-        //     wait (error) {
-        //         log.debug({ status: error.response?.status, headers: error.response?.headers }, 'waiting for retry')
-        //         return new Promise(
-        //             // Use X-Retry-After rather than Retry-After
-        //             // resolve => setTimeout(resolve, error.response.headers['x-retry-after'])
-        //             resolve => setTimeout(resolve, retryAfterMillis)
-        //         )
-        //     }
-        // }))
+
+        if ( retryAfterMillis ) {
+            this.client.interceptors.response.use(null, retry(this.client, {
+                // Determine when we should attempt to retry
+                isRetryable (error) {
+                    log.debug({ status: error.response?.status, headers: error.response?.headers }, 'checking retryable')
+                    return (
+                        error.response && error.response.status === 429
+                        // Use X-Retry-After rather than Retry-After, and cap retry delay at 60 seconds
+                        // && error.response.headers['x-retry-after'] && error.response.headers['x-retry-after'] <= 60
+                    )
+                },
+                // Customize the wait behavior
+                wait (error) {
+                    log.debug({ status: error.response?.status, headers: error.response?.headers }, 'waiting for retry')
+                    return new Promise(
+                        // Use X-Retry-After rather than Retry-After
+                        // resolve => setTimeout(resolve, error.response.headers['x-retry-after'])
+                        resolve => setTimeout(resolve, retryAfterMillis)
+                    )
+                }
+            }))
+        }
     }
 
     async getUser(username: string, options?: { reqId?: string }) {
@@ -77,8 +84,6 @@ export class Proxy {
 
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_USER_POSITIVE_TTL_MS })
-        } else {
-            this.cache.set(key, result, { ttl: GET_USER_NEGATIVE_TTL_MS })
         }
 
         return result
@@ -99,8 +104,6 @@ export class Proxy {
 
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_TWEETS_POSITIVE_TTL_MS })
-        } else {
-            this.cache.set(key, result, { ttl: GET_TWEETS_NEGATIVE_TTL_MS })
         }
 
         return result
@@ -120,8 +123,6 @@ export class Proxy {
 
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_TWEET_POSITIVE_TTL_MS })
-        } else {
-            this.cache.set(key, result, { ttl: GET_TWEET_NEGATIVE_TTL_MS })
         }
 
         return result
