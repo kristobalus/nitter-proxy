@@ -85,6 +85,9 @@ export class Proxy {
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_USER_POSITIVE_TTL_MS })
         }
+        if ( result.status === 404 ) {
+            this.cache.set(key, result, { ttl: GET_USER_NEGATIVE_TTL_MS })
+        }
 
         return result
     }
@@ -105,6 +108,9 @@ export class Proxy {
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_TWEETS_POSITIVE_TTL_MS })
         }
+        if ( result.status === 404 ) {
+            this.cache.set(key, result, { ttl: GET_TWEETS_NEGATIVE_TTL_MS })
+        }
 
         return result
     }
@@ -123,6 +129,9 @@ export class Proxy {
 
         if ( result.status === 200 ) {
             this.cache.set(key, result, { ttl: GET_TWEET_POSITIVE_TTL_MS })
+        }
+        if ( result.status === 404 ) {
+            this.cache.set(key, result, { ttl: GET_TWEET_NEGATIVE_TTL_MS })
         }
 
         return result
