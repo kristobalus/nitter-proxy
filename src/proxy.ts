@@ -30,8 +30,6 @@ export class Proxy {
     private readonly cache: LRUCache<string, JobResponse>
     private readonly client: AxiosInstance
     private readonly queue: fastq.queueAsPromised<Job, JobResponse>
-    private readonly retryAfterMillis: number;
-    private readonly maxCacheSize: number;
 
     constructor(
         private log: Logger,
@@ -40,8 +38,6 @@ export class Proxy {
         retryAfterMillis: number,
         maxCacheSize: number
     ) {
-        this.maxCacheSize = maxCacheSize;
-        this.retryAfterMillis = retryAfterMillis;
         this.cache =  new LRUCache({ max: maxCacheSize })
         this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
         this.client = axios.create()
