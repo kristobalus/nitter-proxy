@@ -4,7 +4,7 @@
 #
 
 app = 'api-nitter'
-primary_region = 'waw'
+primary_region = 'iad'
 
 [build]
   image = 'kristobalus/nitter-proxy:latest'

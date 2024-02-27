@@ -35,6 +35,10 @@ async function main() {
 
         fastify.get(`/user/:username`, {},
             async (request: FastifyRequest, reply: FastifyReply) => {
+                log.debug({
+                    headers: request.headers,
+                    reqId: request.id,
+                    params: request.params }, 'incoming request /user/:username')
                 const { username } = request.params as any
                 const { status, data } = await proxy.getUser(username, { reqId: request.id })
                 reply.status(status).send(data)

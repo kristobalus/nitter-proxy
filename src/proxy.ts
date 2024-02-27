@@ -178,14 +178,14 @@ export class Proxy {
 
         } catch(err) {
 
+            this.log.warn({ err, reqId }, 'nitter error')
+
             if ( err.name === "AxiosError" ) {
 
-                if ( err.status === 429 ) {
-                    this.counter.requests = Number.MAX_SAFE_INTEGER
-                }
+                this.counter.requests = Number.MAX_SAFE_INTEGER
 
                 return {
-                    status: err.status
+                    status: 429
                 } as JobResponse
             }
 
