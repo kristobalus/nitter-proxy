@@ -7,12 +7,12 @@ import { Logger } from "pino"
 import retry from "axios-retry-after"
 import { LRUCache } from 'lru-cache'
 
-const GET_USER_POSITIVE_TTL_MS = 30 * 24 * 3600 * 1000 // 3600 seconds
-const GET_USER_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
-const GET_TWEETS_POSITIVE_TTL_MS = 3600 * 1000 // 20 seconds
-const GET_TWEETS_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
-const GET_TWEET_POSITIVE_TTL_MS = 3600 * 1000 // 60 seconds
-const GET_TWEET_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
+const GET_USER_POSITIVE_TTL_MS = 30 * 24 * 3600 * 1000
+const GET_USER_NEGATIVE_TTL_MS = 3600 * 1000
+const GET_TWEETS_POSITIVE_TTL_MS = 600 * 1000
+const GET_TWEETS_NEGATIVE_TTL_MS = 60 * 1000
+const GET_TWEET_POSITIVE_TTL_MS = 600 * 1000
+const GET_TWEET_NEGATIVE_TTL_MS = 60 * 1000
 
 export interface Job {
     reqId: string

@@ -14,7 +14,7 @@ const host = process.env.HOST
 const port = parseInt(process.env.PORT ?? "8080", 10)
 const baseUrl = process.env.NITTER_BASE_URL
 const concurrency = parseInt(process.env.CONCURRENCY ?? "1", 10)
-const retryAfterMillis = process.env.RETRY_AFTER_MILLIS ? parseInt(process.env.RETRY_AFTER_MILLIS, 10) : 0
+const retryAfterMillis = process.env.RETRY_AFTER_MILLIS ? parseInt(process.env.RETRY_AFTER_MILLIS, 10) : null
 const maxCacheSize = parseInt(process.env.MAX_CACHE_SIZE ?? "100000", 10)
 const logLevel = process.env.LOG_LEVEL ?? "debug"
 
