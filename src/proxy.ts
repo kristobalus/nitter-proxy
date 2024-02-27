@@ -7,12 +7,12 @@ import { Logger } from "pino"
 import retry from "axios-retry-after"
 import { LRUCache } from 'lru-cache'
 
-const GET_USER_POSITIVE_TTL_MS = 86400000 // 3600 seconds
-const GET_USER_NEGATIVE_TTL_MS = 3600000 // 20 seconds
-const GET_TWEETS_POSITIVE_TTL_MS = 3600000 // 20 seconds
-const GET_TWEETS_NEGATIVE_TTL_MS = 3600000 // 20 seconds
-const GET_TWEET_POSITIVE_TTL_MS = 3600000 // 60 seconds
-const GET_TWEET_NEGATIVE_TTL_MS = 3600000 // 20 seconds
+const GET_USER_POSITIVE_TTL_MS = 30 * 24 * 3600 * 1000 // 3600 seconds
+const GET_USER_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
+const GET_TWEETS_POSITIVE_TTL_MS = 3600 * 1000 // 20 seconds
+const GET_TWEETS_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
+const GET_TWEET_POSITIVE_TTL_MS = 3600 * 1000 // 60 seconds
+const GET_TWEET_NEGATIVE_TTL_MS = 3600 * 1000 // 20 seconds
 
 export interface Job {
     reqId: string
@@ -30,6 +30,9 @@ export class Proxy {
     private readonly cache: LRUCache<string, JobResponse>
     private readonly client: AxiosInstance
     private readonly queue: fastq.queueAsPromised<Job, JobResponse>
+    private counter: { requests: number }
+    private timeWindowMillis = 15 * 60 * 1000
+    private maxRequestsPerAccount = 500
 
     constructor(
         private log: Logger,
@@ -39,8 +42,15 @@ export class Proxy {
         maxCacheSize: number
     ) {
         this.cache =  new LRUCache({ max: maxCacheSize })
-        this.queue = fastq.promise(this, this.sendRequest, this.concurrency)
+        this.queue = fastq.promise(this, this.sendRequest, concurrency)
         this.client = axios.create()
+        this.counter = {
+            requests: 0
+        }
+
+        setInterval(() => {
+            this.counter.requests = 0
+        }, this.timeWindowMillis)
 
         if ( retryAfterMillis ) {
             this.client.interceptors.response.use(null, retry(this.client, {
@@ -137,6 +147,12 @@ export class Proxy {
 
         const { reqId, url, params } = job
 
+        if ( this.counter.requests > this.concurrency * this.maxRequestsPerAccount ) {
+            return {
+                status: 429
+            }
+        }
+
         let config = {
             url,
             method: "get",
@@ -146,17 +162,36 @@ export class Proxy {
 
         this.log.trace({ config, reqId: reqId }, 'sending request to nitter')
 
-        const response = await this.client.request(config)
+        try {
+            const response = await this.client.request(config)
 
-        this.log.trace({
-            status: response.status,
-            data: response.data,
-            reqId: reqId
-        }, 'nitter response')
+            this.log.trace({
+                status: response.status,
+                data: response.data,
+                reqId: reqId
+            }, 'nitter response')
 
-        return {
-            status: response.status,
-            data: response.data,
-        } as JobResponse
+            return {
+                status: response.status,
+                data: response.data,
+            } as JobResponse
+
+        } catch(err) {
+
+            if ( err.name === "AxiosError" ) {
+
+                if ( err.status === 429 ) {
+                    this.counter.requests = Number.MAX_SAFE_INTEGER
+                }
+
+                return {
+                    status: err.status
+                } as JobResponse
+            }
+
+            return {
+                status: 500
+            }
+        }
     }
 }
