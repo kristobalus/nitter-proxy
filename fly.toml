@@ -15,7 +15,7 @@ primary_region = 'waw'
   NITTER_BASE_URL = 'https://unmanaged-api-nitter.fly.dev'
   NITTER_GUEST_ACCOUNTS_URL = 'https://guest-keeper.fly.dev/guest-accounts'
   PORT = '8080'
-  RETRY_AFTER_MILLIS = '1000'
+  RETRY_AFTER_MILLIS = '0'
 
 [http_service]
   internal_port = 8080
