@@ -7,12 +7,24 @@ import { Logger } from "pino"
 import retry from "axios-retry-after"
 import { LRUCache } from 'lru-cache'
 
-const GET_USER_POSITIVE_TTL_MS = process.env.GET_USER_POSITIVE_TTL_MS ? parseInt(process.env.GET_USER_POSITIVE_TTL_MS, 10) : 30 * 24 * 3600 * 1000
-const GET_USER_NEGATIVE_TTL_MS = process.env.GET_USER_NEGATIVE_TTL_MS? parseInt(process.env.GET_USER_NEGATIVE_TTL_MS, 10) : 3600 * 1000
-const GET_TWEETS_POSITIVE_TTL_MS = process.env.GET_TWEETS_POSITIVE_TTL_MS ? parseInt(process.env.GET_TWEETS_POSITIVE_TTL_MS, 10) : 60 * 1000
-const GET_TWEETS_NEGATIVE_TTL_MS = process.env.GET_TWEETS_NEGATIVE_TTL_MS ? parseInt(process.env.GET_TWEETS_NEGATIVE_TTL_MS, 10) : 60 * 1000
-const GET_TWEET_POSITIVE_TTL_MS = process.env.GET_TWEET_POSITIVE_TTL_MS ? parseInt(process.env.GET_TWEET_POSITIVE_TTL_MS, 10) : 60 * 1000
-const GET_TWEET_NEGATIVE_TTL_MS = process.env.GET_TWEET_NEGATIVE_TTL_MS ? parseInt(process.env.GET_TWEET_NEGATIVE_TTL_MS, 10) : 60 * 1000
+const GET_USER_POSITIVE_TTL_MS = process.env.GET_USER_POSITIVE_TTL
+    ? parseInt(process.env.GET_USER_POSITIVE_TTL, 10) * 1000
+    : 30 * 24 * 3600 * 1000
+const GET_USER_NEGATIVE_TTL_MS = process.env.GET_USER_NEGATIVE_TTL
+    ? parseInt(process.env.GET_USER_NEGATIVE_TTL, 10) * 1000
+    : 3600 * 1000
+const GET_TWEETS_POSITIVE_TTL_MS = process.env.GET_TWEETS_POSITIVE_TTL
+    ? parseInt(process.env.GET_TWEETS_POSITIVE_TTL, 10) * 1000
+    : 60 * 1000
+const GET_TWEETS_NEGATIVE_TTL_MS = process.env.GET_TWEETS_NEGATIVE_TTL
+    ? parseInt(process.env.GET_TWEETS_NEGATIVE_TTL, 10) * 1000
+    : 60 * 1000
+const GET_TWEET_POSITIVE_TTL_MS = process.env.GET_TWEET_POSITIVE_TTL
+    ? parseInt(process.env.GET_TWEET_POSITIVE_TTL, 10) * 1000
+    : 60 * 1000
+const GET_TWEET_NEGATIVE_TTL_MS = process.env.GET_TWEET_NEGATIVE_TTL
+    ? parseInt(process.env.GET_TWEET_NEGATIVE_TTL, 10) * 1000
+    : 60 * 1000
 
 export interface Job {
     reqId: string
