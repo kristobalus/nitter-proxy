@@ -21,10 +21,10 @@ primary_region = 'iad'
   min_machines_running = 0
   processes = ['app']
 
-  [http_service.concurrency]
-    type = 'connections'
-    hard_limit = 1000
-    soft_limit = 1000
+[http_service.concurrency]
+  type = 'connections'
+  hard_limit = 1000
+  soft_limit = 1000
 
 [[vm]]
   cpu_kind = 'shared'
