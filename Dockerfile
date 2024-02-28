@@ -9,7 +9,8 @@ WORKDIR /opt
 
 COPY package.json /opt
 COPY tsconfig.json /opt
-COPY package-lock.json /opt
+# COPY package-lock.json /opt
+# COPY pnpm-lock.json /opt
 
 RUN pnpm install --loglevel verbose
 
