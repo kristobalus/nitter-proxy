@@ -32,7 +32,7 @@ export class Proxy {
     private readonly queue: fastq.queueAsPromised<Job, JobResponse>
     private counter: { requests: number }
     private timeWindowMillis = 15 * 60 * 1000
-    private maxRequestsPerAccount = 500
+    private maxRequestsPerAccount = 15 * 60
 
     constructor(
         private log: Logger,
