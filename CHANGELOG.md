@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.5](https://github.com/kristobalus/nitter-proxy/compare/v1.6.4...v1.6.5) (2024-02-28)
+
+
+### Bug Fixes
+
+* caching tweets ([63cef58](https://github.com/kristobalus/nitter-proxy/commit/63cef581d23644e9e8acd751c6e98eab18476959))
+
 ### [1.6.4](https://github.com/kristobalus/nitter-proxy/compare/v1.6.3...v1.6.4) (2024-02-28)
 
 
