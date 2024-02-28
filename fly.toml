@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for api-nitter on 2024-02-15T09:31:15+06:00
+# fly.toml app configuration file generated for api-nitter on 2024-02-29T03:24:31+06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -12,8 +12,6 @@ primary_region = 'iad'
 [env]
   HOST = '0.0.0.0'
   PORT = '8080'
-#  CONCURRENCY = '5'
-#  RETRY_AFTER_MILLIS = '0'
 
 [http_service]
   internal_port = 8080
@@ -23,10 +21,10 @@ primary_region = 'iad'
   min_machines_running = 0
   processes = ['app']
 
-[http_service.concurrency]
-  type = "connections"
-  hard_limit = 1000
-  soft_limit = 1000
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 1000
+    soft_limit = 1000
 
 [[vm]]
   cpu_kind = 'shared'
