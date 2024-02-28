@@ -1,13 +1,20 @@
 {
   "name": "nitter-proxy",
-  "version": "1.0.0",
+  "version": "1.6.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf build/",
     "prebuild": "npm run clean",
-    "build": "tsc"
+    "ts-node": "ts-node",
+    "build": "tsc --build",
+    "prerelease": "npm run build && git add . --all",
+    "release": "standard-version -a",
+    "postrelease": "git push --follow-tags origin master",
+    "version": "standard-version --dry-run",
+    "rc": "standard-version -a --prerelease",
+    "publish": "bash build-image.sh"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +34,7 @@
     "@types/axios": "^0.14.0",
     "dotenv": "^16.4.4",
     "rimraf": "^5.0.1",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.9.1"
   }
 }
